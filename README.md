@@ -18,4 +18,4 @@
 本文の写真は Unsplash（商用利用可・クレジット表記不要）のものです。
 自社の施工現場写真に差し替える場合は `assets/img/` の同名ファイルを上書きしてください。
 
-（c) KUNO SHOJI CO., LTD.
+(c) KUNO SHOJI CO., LTD.

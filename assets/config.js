@@ -10,7 +10,7 @@ window.APOTTO_CONFIG = {
      https://script.google.com/macros/s/xxxxxxxx/exec
      を、下のシングルクォートの中に貼り付けてください。
      空のままだと、フォームは送信ボタンを止めて電話・メールをご案内します。 */
-  gasEndpoint: '',
+  gasEndpoint: 'https://script.google.com/macros/s/AKfycbyJhwPQURRr2eDDxgwUSJO5v2U7aY5jytn64PpRLd5fJFgX0quIVjvhZijq3aMHY6jLzg/exec',
 
   /* 送信完了後に表示するページ */
   thanksUrl: 'thanks.html',
