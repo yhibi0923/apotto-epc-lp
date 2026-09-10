@@ -16,7 +16,7 @@ var SPREADSHEET_ID = '1pnmKkg_sIqzE4i4HU8JNhlIjPWwWflarhBnOS4yke6M';
 var SHEET_NAME = 'EPC問い合わせ';
 
 /** 社内への通知先。カンマ区切りで複数可 */
-var NOTIFY_TO = 'marketing@kunoshoji.com';
+var NOTIFY_TO = 'marketing@kunoshoji.com,yhibi@kunoshoji.com';
 
 /** 送信者への自動返信を出すか */
 var SEND_AUTO_REPLY = true;
