@@ -248,3 +248,15 @@ function testPost() {
   });
   console.log(result.getContent());
 }
+
+
+/**
+ * スプレッドシートのタイムゾーンを日本時間にする。
+ * 受付日時が米国時間で表示されるのを直すため、1回だけ実行すればよい。
+ * （2026-09-10に実行済み）
+ */
+function setupTimeZone() {
+  var book = SpreadsheetApp.openById(SPREADSHEET_ID);
+  book.setSpreadsheetTimeZone('Asia/Tokyo');
+  console.log('タイムゾーン: ' + book.getSpreadsheetTimeZone());
+}
