@@ -269,7 +269,13 @@ nav.primary a:hover::after { transform: scaleX(1); }
 }
 
 .hero-bg { position: absolute; inset: 0; z-index: -1; }
-.hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+.hero-bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%;
+  /* ドローンがゆっくり通過していくような寄り引き */
+  transform: scale(1.06);
+  animation: heroPan 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
 
 /* 写真の上に濃紺を重ねて、白文字が確実に読めるようにする */
 .hero-bg::after {
@@ -279,14 +285,52 @@ nav.primary a:hover::after { transform: scaleX(1); }
     linear-gradient(to top, rgba(6,11,32,.85) 0%, rgba(6,11,32,0) 44%);
 }
 
-/* パネルの列を思わせる細い斜線。ごく薄く */
+/* パネルの列を思わせる細い斜線。ごく薄く、後ろへ流れていく */
 .hero-bg::before {
-  content: ""; position: absolute; inset: 0; z-index: 1;
+  content: ""; position: absolute; inset: -80px; z-index: 1;
   background: repeating-linear-gradient(115deg,
     rgba(255,255,255,.05) 0 1px, transparent 1px 26px);
+  animation: stripeDrift 14s linear infinite;
 }
 
-.hero-inner { position: relative; max-width: 860px; }
+/* 陽がパネルの上を移っていくような光の帯。
+   既定を opacity:0 にしてあるので、動きが止まる環境（動きを減らす設定・
+   アニメ非対応・描画が止まった場合）では、ただ見えないだけで済む。
+   明るい帯が左端に出たまま固まることはない。 */
+.hero::before {
+  content: ""; position: absolute;
+  top: -15%; bottom: -15%; left: 0; width: 40%;
+  z-index: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(100deg,
+    rgba(255,238,198,0) 0%,
+    rgba(255,238,198,.09) 48%,
+    rgba(255,238,198,.13) 56%,
+    rgba(255,238,198,0) 100%);
+  animation: sunSweep 17s ease-in-out infinite;
+}
+
+.hero-inner { position: relative; z-index: 1; max-width: 860px; }
+
+/* ---- 背景の動き ----
+   いずれも transform と opacity だけを動かすので、描画の負担は小さい。
+   動きを減らす設定の人には下の @media で止めている。 */
+@keyframes heroPan {
+  from { transform: scale(1.06) translate3d(0, 0, 0); }
+  to   { transform: scale(1.14) translate3d(-1.5%, -1.2%, 0); }
+}
+
+/* 斜線の周期（26px）ぶんだけ斜めにずらすと、継ぎ目なく繰り返す */
+@keyframes stripeDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-23.6px, -11px, 0); }
+}
+
+@keyframes sunSweep {
+  0%   { transform: translate3d(-60%, 0, 0); opacity: 0; }
+  14%  { opacity: 1; }
+  86%  { opacity: 1; }
+  100% { transform: translate3d(190%, 0, 0); opacity: 0; }
+}
 
 .badge {
   display: inline-flex; gap: 9px; align-items: center;
@@ -704,14 +748,22 @@ details.faq p { margin: 0 26px 24px; font-size: 16.5px; max-width: 62em; }
 .cta-band img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; z-index: -2;
+  transform: scale(1.04);
+  animation: heroPan 36s ease-in-out infinite alternate;
+  will-change: transform;
 }
+/* 覆い（止めたまま） */
 .cta-band::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(6,11,32,.88) 0%, rgba(8,14,40,.80) 100%),
-    repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 1px, transparent 1px 26px);
+  background: linear-gradient(180deg, rgba(6,11,32,.88) 0%, rgba(8,14,40,.80) 100%);
 }
-.cta-band .wrap { padding-block: 96px; text-align: center; }
+/* 斜線（ヒーローよりゆっくり流す） */
+.cta-band::after {
+  content: ""; position: absolute; inset: -80px; z-index: -1;
+  background: repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 1px, transparent 1px 26px);
+  animation: stripeDrift 22s linear infinite;
+}
+.cta-band .wrap { position: relative; padding-block: 96px; text-align: center; }
 .cta-band h2 {
   color: #fff; font-size: clamp(25px, 3.5vw, 38px); font-weight: 900; letter-spacing: -.015em;
 }
@@ -953,9 +1005,12 @@ footer.site a:hover { color: #fff; text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
-    animation-duration: .001ms !important;
+    /* 途中の状態で止まらないよう、動きそのものを無くす。
+       写真は scale(1.06) の静止状態、斜線と光の帯は初期位置に戻る */
+    animation: none !important;
     transition-duration: .001ms !important;
   }
+  .hero::before { opacity: 0; }
 }
 
 @media print {
